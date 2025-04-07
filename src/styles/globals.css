@@ -1,0 +1,38 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-IRANSansX), sans-serif !important;
+  -ms-overflow-style: none;
+}
+
+body {
+  font-family: var(--font-IRANSansX), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.Toastify__toast {
+  border-radius: 1rem !important;
+  color: #3d3d3d !important;
+  font-family: var(--font-IRANSansX), sans-serif !important;
+  margin: 0.5rem !important;
+}
+
+.Toastify__toast--error {
+  background-color: red !important;
+  color: #fff !important;
+}
+
+.Toastify__toast--success {
+  background-color: lightgreen !important;
+}
+
+.Toastify__toast--info {
+  background-color: lightblue !important;
+}
+
+.Toastify__toast--warning {
+  background-color: #ffe088 !important;
+}
