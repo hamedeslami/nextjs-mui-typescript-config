@@ -1,5 +1,6 @@
 import axios, {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import { toast } from 'react-toastify';
+import Cookies from "js-cookie";
 
 const axiosInstance = axios.create();
 const BASE_API_URL: string = process.env.BASE_API_URL as string;
@@ -7,8 +8,8 @@ const BASE_API_URL: string = process.env.BASE_API_URL as string;
 const onUnAuthorize = async (error: AxiosError): Promise<AxiosResponse> => {
     const originalRequest: InternalAxiosRequestConfig | undefined = error.config;
 
-    const token = localStorage.getItem('AUTH_USER_TOKEN');
-    const refreshToken = localStorage.getItem('AUTH_REFRESH_TOKEN');
+    const token = Cookies.get('AUTH_USER_TOKEN');
+    const refreshToken = Cookies.get('AUTH_REFRESH_TOKEN');
 
     try {
         const refreshData = await axiosInstance.post(
@@ -19,30 +20,30 @@ const onUnAuthorize = async (error: AxiosError): Promise<AxiosResponse> => {
 
         const newToken: string | undefined = refreshData?.data?.token;
         if (!newToken) throw new Error('token is invalid');
-        localStorage.setItem('AUTH_USER_TOKEN', newToken);
+        Cookies.set('AUTH_USER_TOKEN', newToken);
 
         return axios({
             ...originalRequest,
             headers: {...originalRequest?.headers, Authorization: newToken}
         });
     } catch (e) {
-        localStorage.removeItem('AUTH_USER_TOKEN');
-        localStorage.removeItem('AUTH_REFRESH_TOKEN');
+        Cookies.remove('AUTH_USER_TOKEN');
+        Cookies.remove('AUTH_REFRESH_TOKEN');
+
         return Promise.reject(error || e);
     }
 };
 
 const onForbidden = (): void => {
-    localStorage.removeItem('AUTH_USER_TOKEN');
-    localStorage.removeItem('AUTH_REFRESH_TOKEN');
+    Cookies.remove('AUTH_USER_TOKEN');
+    Cookies.remove('AUTH_REFRESH_TOKEN');
 };
 
 const onRequest = (
     config: InternalAxiosRequestConfig
 ): InternalAxiosRequestConfig => {
     const newConfig = {...config};
-    const token = localStorage.getItem('AUTH_USER_TOKEN');
-
+    const token = Cookies.get('AUTH_USER_TOKEN');
     newConfig.baseURL = BASE_API_URL;
     newConfig.headers['Content-Type'] = 'application/json';
 
