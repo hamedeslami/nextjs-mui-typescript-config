@@ -15,7 +15,7 @@ const onUnAuthorize = async (error: AxiosError): Promise<AxiosResponse> => {
         const refreshData = await axiosInstance.post(
             `${BASE_API_URL}/refresh-token`,
             {refreshToken},
-            {headers: {Authorization: token}}
+            {headers: {Authorization: `Bearer ${token}`}}
         );
 
         const newToken: string | undefined = refreshData?.data?.token;
