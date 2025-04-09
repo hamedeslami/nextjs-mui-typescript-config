@@ -13,7 +13,8 @@ export default async function middleware(req: NextRequest): Promise<NextResponse
     const isProtectedRoute: boolean = protectedRoutes.includes(path);
     const isPublicRoute: boolean = publicRoutes.includes(path);
 
-    const token = (await cookies()).get("AUTH_USER_TOKEN");
+    const cookieStore = await cookies();
+    const token = cookieStore.get('AUTH_USER_TOKEN');
 
     if (isProtectedRoute && !token) {
         return NextResponse.redirect(new URL("/auth/login", req.nextUrl));
